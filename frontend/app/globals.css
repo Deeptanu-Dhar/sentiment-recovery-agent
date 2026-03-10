@@ -1,0 +1,94 @@
+:root {
+  --page-bg: #f4f7f6;
+  --surface: #ffffff;
+  --surface-muted: #f8faf9;
+  --border: #dbe4df;
+  --text-strong: #14231d;
+  --text-body: #365047;
+  --text-muted: #5f766d;
+  --accent: #0f8a5f;
+  --accent-soft: #e7f6ef;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: radial-gradient(circle at top left, #f7fbf8 0%, var(--page-bg) 55%, #eef4f1 100%);
+  color: var(--text-strong);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@keyframes shellFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pageRiseIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.shell-enter {
+  animation: shellFadeIn 320ms ease-out;
+}
+
+.page-enter {
+  animation: pageRiseIn 420ms ease-out;
+}
+
+.section-enter {
+  animation: pageRiseIn 460ms ease-out;
+}
+
+.nav-pill {
+  transition:
+    transform 220ms ease,
+    background-color 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #edf3ef;
+}
+::-webkit-scrollbar-thumb {
+  background: #bdd9cd;
+  border-radius: 999px;
+  border: 2px solid #edf3ef;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #0f8a5f;
+}
