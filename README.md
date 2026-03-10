@@ -1,47 +1,98 @@
-# Sentiment-Driven Service Recovery Agent 🏥
+# Sentiment-Driven Service Recovery Agent
 
-An AI-powered full-stack hospital patient feedback system with real-time sentiment analysis, complaint management, and manager alerting.
+A full-stack hospital operations app for post-discharge feedback, WhatsApp-based service recovery, ticketing, and weekly reporting.
+
+## What It Does
+
+The project tracks a patient recovery workflow from discharge to follow-up:
+
+1. A patient is marked as `Paid` or `Discharged`.
+2. The backend sends a WhatsApp feedback request.
+3. The patient replies on WhatsApp.
+4. Feedback is analyzed for sentiment, severity, category, and summary.
+5. Negative feedback can create a ticket, notify the duty manager, and send a resolution message.
+6. Positive feedback can trigger a thank-you follow-up.
+7. The dashboard, feedback monitor, simulator, and analytics views reflect the latest state.
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Frontend | Next.js 14 (App Router), TailwindCSS, Recharts, WebSocket |
-| Backend | Python FastAPI, WebSockets |
-| AI | Google Gemini 1.5 Flash |
-| Database | MongoDB (Motor async driver) |
+- Frontend: Next.js 16, React 19, TypeScript, MUI, Recharts
+- Backend: FastAPI, Motor, WebSockets
+- Database: MongoDB
+- Messaging: Twilio WhatsApp
+- AI: Google Gemini with local fallback when quota is unavailable
 
----
+## Project Structure
 
-## Quick Start
-
-### Prerequisites
-- Python 3.11+
-- Node.js 18+
-- MongoDB running locally on port 27017
-- A Google Gemini API key
-
-### 1. Configure Environment
-
-```bash
-# Backend
-cp .env.example backend/.env
-# Edit backend/.env and set GOOGLE_API_KEY=your_key_here
+```text
+Sentiment-Driven-Service-Recovery--Agent-/
+├── backend/
+│   ├── main.py
+│   ├── requirements.txt
+│   ├── seed.py
+│   ├── db/
+│   ├── models/
+│   ├── routes/
+│   └── services/
+├── frontend/
+│   ├── app/
+│   ├── components/
+│   ├── lib/
+│   └── public/
+└── README.md
 ```
 
-### 2. Start the Backend
+## Main Pages
+
+- `/simulator`: Walk through the patient recovery workflow
+- `/dashboard`: Live operational summary
+- `/feedback`: Feedback records, summaries, sentiment, and response text
+- `/tickets`: Complaint ticket tracking
+- `/heatmap`: Department-level issue concentration
+- `/analytics`: Weekly report and recommended actions
+- `/notifications`: Manager alert feed
+
+## Backend API
+
+Main backend routes:
+
+- `/api/patients`
+- `/api/feedback`
+- `/api/tickets`
+- `/api/notifications`
+- `/api/analytics`
+- `/api/heatmap`
+- `/api/whatsapp`
+- `/ws` for live updates
+
+## Environment Variables
+
+Create `backend/.env` with at least:
+
+```env
+MONGO_URI=mongodb://localhost:27017
+MONGO_DB_NAME=recovery_agent
+GEMINI_API_KEY=your_gemini_key
+TWILIO_ACCOUNT_SID=your_twilio_sid
+TWILIO_AUTH_TOKEN=your_twilio_token
+TWILIO_WHATSAPP_FROM=whatsapp:+14155238886
+HOSPITAL_NAME=Your Hospital Name
+```
+
+## Local Setup
+
+### Backend
 
 ```bash
 cd backend
 pip install -r requirements.txt
-python seed.py        # Seed demo data (run once)
-uvicorn main:app --reload --port 8000
+python seed.py
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-Backend runs at: http://localhost:8000  
-API docs: http://localhost:8000/docs
+Backend will run on `http://localhost:8000`.
 
-### 3. Start the Frontend
+### Frontend
 
 ```bash
 cd frontend
@@ -49,81 +100,16 @@ npm install
 npm run dev
 ```
 
-Frontend runs at: http://localhost:3000
+Frontend will run on `http://localhost:3000`.
 
----
+## Notes
 
-## Features
+- Twilio status callbacks are handled through `/api/whatsapp/status`.
+- Incoming WhatsApp replies are processed through `/api/whatsapp/webhook`.
+- If Gemini quota is exhausted, the backend falls back to local heuristic analysis so the workflow does not fail.
+- The frontend build check is:
 
-### Core Workflow
-1. Patient discharged → survey triggered automatically
-2. Patient submits feedback
-3. Gemini AI analyzes: **sentiment + emotion + category + severity + resolution**
-4. Negative → complaint ticket created + manager alerted in real time
-5. Positive → Google review request logged
-6. Dashboard updates instantly via WebSocket
-
-### Pages
-| Page | URL | Description |
-|---|---|---|
-| Dashboard | `/dashboard` | Stat cards, charts, live activity feed |
-| Feedback Monitor | `/feedback` | Submit & view feedback with AI analysis |
-| Complaint Tickets | `/tickets` | Manage and resolve tickets |
-| Dept Heatmap | `/heatmap` | Risk intensity by department |
-| Analytics | `/analytics` | Weekly trends & category breakdown |
-| Notifications | `/notifications` | Manager critical alerts panel |
-
-### AI (Gemini 1.5 Flash)
-- Sentiment: Positive / Negative / Neutral
-- Emotion detection (Angry / Frustrated / Satisfied / etc.)
-- Complaint category extraction
-- Severity score (1–5)
-- Personalized resolution message
-
-### Real-Time Events (WebSocket)
-- `new_feedback` – feedback received
-- `new_ticket` – complaint ticket created
-- `ticket_resolved` – ticket marked resolved
-- `manager_alert` – critical complaint (severity ≥ 4)
-- `escalation` – repeated complaints (3+ same dept per week)
-
----
-
-## Project Structure
-
-```
-├── backend/
-│   ├── main.py              # FastAPI app entry
-│   ├── db/mongodb.py        # MongoDB (Motor) connection
-│   ├── models/schemas.py    # Pydantic models
-│   ├── routes/              # API routes
-│   │   ├── feedback.py
-│   │   ├── tickets.py
-│   │   ├── patients.py
-│   │   ├── dashboard.py
-│   │   ├── reports.py
-│   │   ├── departments.py
-│   │   └── managers.py
-│   ├── services/
-│   │   ├── gemini_service.py  # Gemini AI
-│   │   ├── ticket_service.py  # Ticket + escalation logic
-│   │   └── ws_manager.py      # WebSocket broadcast
-│   ├── seed.py               # Demo data seeder
-│   └── requirements.txt
-├── frontend/
-│   ├── app/                  # Next.js App Router pages
-│   │   ├── dashboard/
-│   │   ├── feedback/
-│   │   ├── tickets/
-│   │   ├── heatmap/
-│   │   ├── analytics/
-│   │   └── notifications/
-│   ├── components/
-│   │   ├── Sidebar.tsx
-│   │   └── WSProvider.tsx
-│   └── lib/
-│       ├── api.ts
-│       ├── websocket.ts
-│       └── utils.ts
-└── .env.example
+```bash
+cd frontend
+npm run build
 ```
