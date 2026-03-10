@@ -52,6 +52,84 @@ Sentiment-Driven-Service-Recovery--Agent-/
 - `/analytics`: Weekly report and recommended actions
 - `/notifications`: Manager alert feed
 
+## Workflow Walkthrough
+
+This is the main service recovery flow shown in the simulator and the WhatsApp conversation.
+
+### 1. Start the recovery workflow
+
+The simulator begins by selecting a patient and marking billing as complete so the discharge workflow can start.
+
+![Simulator step 1](./assets/screenshots/simulator1.jpeg)
+
+### 2. Track workflow progress
+
+The simulator then follows the patient journey through feedback capture, AI analysis, ticketing, escalation, and resolution.
+
+![Simulator step 2](./assets/screenshots/simulator2.jpeg)
+
+### 3. Review the final outcome
+
+Once the patient responds, the system records the result, creates operational actions when needed, and shows the completed workflow state.
+
+![Simulator step 3](./assets/screenshots/simulator3.jpeg)
+
+### 4. Negative feedback path on WhatsApp
+
+For a negative response, the system analyzes the complaint, creates a ticket when appropriate, alerts the manager, and sends a resolution message back to the patient.
+
+![WhatsApp negative flow](./assets/screenshots/whatsapp1.png)
+
+### 5. Positive feedback path on WhatsApp
+
+For a positive response, the system keeps the flow lightweight and sends a thank-you follow-up instead of a complaint-resolution path.
+
+![WhatsApp positive flow](./assets/screenshots/whatsapp2.png)
+
+## Screenshots By Tab
+
+### Simulator
+
+![Simulator overview](./assets/screenshots/simulator1.jpeg)
+![Simulator workflow state](./assets/screenshots/simulator2.jpeg)
+![Simulator result view](./assets/screenshots/simulator3.jpeg)
+
+### Dashboard
+
+The dashboard gives a live operational summary of feedback volume, open tickets, critical alerts, and severity trends.
+
+![Dashboard](./assets/screenshots/dashboard1.jpeg)
+
+### Feedback
+
+The feedback tab shows each patient response with the analyzed summary, sentiment, severity, category, and the generated follow-up message.
+
+![Feedback tab](./assets/screenshots/feedback1.jpeg)
+
+### Tickets
+
+The tickets tab is used to track complaint cases that need follow-up and operational resolution.
+
+![Tickets tab](./assets/screenshots/tickets1.jpeg)
+
+### Heatmap
+
+The heatmap view highlights departments with higher complaint concentration and risk patterns.
+
+![Heatmap tab](./assets/screenshots/heatmap1.jpeg)
+
+### Analytics
+
+The analytics tab generates the weekly report, highlights overall insight, and lists recommended actions for leadership.
+
+![Analytics tab](./assets/screenshots/Weeklyreoport1.jpeg)
+
+### Alerts
+
+The alerts tab shows manager-facing notifications triggered by serious complaints and escalation events.
+
+![Alerts tab](./assets/screenshots/alerts.jpeg)
+
 ## Backend API
 
 Main backend routes:
